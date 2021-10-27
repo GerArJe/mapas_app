@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:mapas_app/helpers/helpers.dart';
+import 'package:mapas_app/pages/acceso_gps_page.dart';
 import 'package:mapas_app/pages/mapa_page.dart';
 
 class LoadingPage extends StatelessWidget {
@@ -12,19 +15,38 @@ class LoadingPage extends StatelessWidget {
       body: FutureBuilder(
         future: this.checkGpsYLocation(context),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
-          return Center(
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-            ),
-          );
+          if (snapshot.hasData) {
+            return Center(
+              child: Text(snapshot.data),
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+              ),
+            );
+          }
         },
       ),
     );
   }
 
   Future checkGpsYLocation(BuildContext context) async {
-    await Future.delayed(Duration(milliseconds: 1000));
+    final permisoGPS = await Permission.location.isGranted;
+    final gpsActivo = await Geolocator.isLocationServiceEnabled();
 
-    Navigator.pushReplacement(context, navegarMapaFadeIn(context, MapaPage()));
+    // await Future.delayed(Duration(milliseconds: 100));
+
+    if (permisoGPS && gpsActivo) {
+      Navigator.pushReplacement(
+          context, navegarMapaFadeIn(context, MapaPage()));
+      return '';
+    } else if (!permisoGPS) {
+      Navigator.pushReplacement(
+          context, navegarMapaFadeIn(context, AccesoGpsPage()));
+      return 'Es necesario el permiso de GPS';
+    } else {
+      return 'Active GPS';
+    }
   }
 }
