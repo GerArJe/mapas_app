@@ -33,6 +33,10 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     on<OnMarcarRecorrido>((event, emit) {
       emit(_onMarcarRecorrido(event));
     });
+
+    on<OnSeguirUbicacion>((event, emit) {
+      emit(_onSeguirUbicacion(event));
+    });
   }
 
   void initMapa(GoogleMapController controller) {
@@ -49,6 +53,9 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
   }
 
   MapaState _onNuevaUbicacion(OnNuevaUbicacion event) {
+    if (state.seguirUbicacion) {
+      moverCamara(event.ubicacion);
+    }
     List<LatLng> points = [..._miRuta.points, event.ubicacion];
     _miRuta = _miRuta.copyWith(pointsParam: points);
     final currenPolylines = state.polylines;
@@ -66,5 +73,12 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     currenPolylines['mi_ruta'] = _miRuta;
     return state.copyWith(
         polylines: currenPolylines, dibujarRecorrido: !state.dibujarRecorrido);
+  }
+
+  MapaState _onSeguirUbicacion(OnSeguirUbicacion event) {
+    if (!state.seguirUbicacion) {
+      moverCamara(_miRuta.points[_miRuta.points.length - 1]);
+    }
+    return state.copyWith(seguirUbicacion: !state.seguirUbicacion);
   }
 }
