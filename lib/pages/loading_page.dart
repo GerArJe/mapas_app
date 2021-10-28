@@ -6,8 +6,35 @@ import 'package:mapas_app/helpers/helpers.dart';
 import 'package:mapas_app/pages/acceso_gps_page.dart';
 import 'package:mapas_app/pages/mapa_page.dart';
 
-class LoadingPage extends StatelessWidget {
+class LoadingPage extends StatefulWidget {
   const LoadingPage({Key? key}) : super(key: key);
+
+  @override
+  State<LoadingPage> createState() => _LoadingPageState();
+}
+
+class _LoadingPageState extends State<LoadingPage> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    WidgetsBinding.instance?.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.resumed) {
+      if (await Geolocator.isLocationServiceEnabled()) {
+        Navigator.pushReplacement(
+            context, navegarMapaFadeIn(context, MapaPage()));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
