@@ -59,7 +59,6 @@ class _AccesoGpsPageState extends State<AccesoGpsPage>
   }
 
   void accesoGps(status) {
-    print(status);
     switch (status) {
       case PermissionStatus.granted:
         Navigator.pushReplacementNamed(context, 'mapa');

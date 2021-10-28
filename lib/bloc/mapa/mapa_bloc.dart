@@ -10,11 +10,25 @@ part 'mapa_event.dart';
 part 'mapa_state.dart';
 
 class MapaBloc extends Bloc<MapaEvent, MapaState> {
+  // Controlardor del mapa
   GoogleMapController? _mapController;
+
+  // Polylines
+  Polyline _miRuta = Polyline(
+    polylineId: PolylineId('mi_ruta'),
+    width: 4,
+  );
 
   MapaBloc() : super(MapaState()) {
     on<OnMapalisto>((event, emit) {
       emit(state.copyWith(mapaListo: true));
+    });
+    on<OnNuevaUbicacion>((event, emit) {
+      List<LatLng> points = [..._miRuta.points, event.ubicacion];
+      _miRuta = _miRuta.copyWith(pointsParam: points);
+      final currenPolylines = state.polylines;
+      currenPolylines['mi_ruta'] = _miRuta;
+      emit(state.copyWith(polylines: currenPolylines));
     });
   }
 

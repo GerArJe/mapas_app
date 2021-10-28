@@ -46,6 +46,8 @@ class _MapaPageState extends State<MapaPage> {
 
     final mapaBloc = BlocProvider.of<MapaBloc>(context);
 
+    mapaBloc.add(OnNuevaUbicacion(state.ubicacion!));
+
     final cameraPosition = CameraPosition(
       target: state.ubicacion!,
       zoom: 15,
@@ -57,6 +59,7 @@ class _MapaPageState extends State<MapaPage> {
       myLocationButtonEnabled: false,
       zoomControlsEnabled: false,
       onMapCreated: mapaBloc.initMapa,
+      polylines: mapaBloc.state.polylines.values.toSet(),
     );
   }
 }

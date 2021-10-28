@@ -13,7 +13,6 @@ class MiUbicacionBloc extends Bloc<MiUbicacionEvent, MiUbicacionState> {
 
   MiUbicacionBloc() : super(MiUbicacionState()) {
     on<OnUbicacionCambio>((event, emit) {
-      print(event);
       emit(MiUbicacionState(
         existeUbicacion: true,
         ubicacion: event.ubicacion,
