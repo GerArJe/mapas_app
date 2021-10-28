@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 import 'package:mapas_app/bloc/mi_ubicacion/mi_ubicacion_bloc.dart';
 
 class MapaPage extends StatefulWidget {
@@ -33,6 +35,14 @@ class _MapaPageState extends State<MapaPage> {
 
   Widget crearMapa(MiUbicacionState state) {
     if (!state.existeUbicacion) return Center(child: Text('Ubicando...'));
-    return Text('${state.ubicacion?.latitude}, ${state.ubicacion?.longitude}');
+    final cameraPosition = CameraPosition(
+      target: state.ubicacion!,
+      zoom: 15,
+    );
+    return GoogleMap(
+      initialCameraPosition: cameraPosition,
+      myLocationEnabled: true,
+      myLocationButtonEnabled: false,
+    );
   }
 }
