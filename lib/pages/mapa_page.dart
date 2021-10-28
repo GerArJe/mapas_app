@@ -35,7 +35,7 @@ class _MapaPageState extends State<MapaPage> {
   }
 
   Widget crearMapa(MiUbicacionState state) {
-    if (!state.existeUbicacion) return Center(child: Text('Ubicando...'));
+    if (!state.existeUbicacion) return const Center(child: Text('Ubicando...'));
 
     final mapaBloc = BlocProvider.of<MapaBloc>(context);
 
@@ -43,6 +43,7 @@ class _MapaPageState extends State<MapaPage> {
       target: state.ubicacion!,
       zoom: 15,
     );
+
     return GoogleMap(
       initialCameraPosition: cameraPosition,
       myLocationEnabled: true,
