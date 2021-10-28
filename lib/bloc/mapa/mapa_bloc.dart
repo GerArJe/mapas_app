@@ -25,4 +25,9 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
       add(OnMapalisto());
     }
   }
+
+  void moverCamara(LatLng destino) {
+    final cameraUpdate = CameraUpdate.newLatLng(destino);
+    _mapController?.animateCamera(cameraUpdate);
+  }
 }
