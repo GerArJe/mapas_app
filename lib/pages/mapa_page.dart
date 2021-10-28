@@ -62,6 +62,10 @@ class _MapaPageState extends State<MapaPage> {
       zoomControlsEnabled: false,
       onMapCreated: mapaBloc.initMapa,
       polylines: mapaBloc.state.polylines.values.toSet(),
+      onCameraMove: (cameraPosition) {
+        // cameraPosition.target = LatLng central del mapa
+        mapaBloc.add(OnMovioMapa(cameraPosition.target));
+      },
     );
   }
 }
