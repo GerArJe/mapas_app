@@ -27,24 +27,11 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     });
 
     on<OnNuevaUbicacion>((event, emit) {
-      List<LatLng> points = [..._miRuta.points, event.ubicacion];
-      _miRuta = _miRuta.copyWith(pointsParam: points);
-      final currenPolylines = state.polylines;
-      currenPolylines['mi_ruta'] = _miRuta;
-      emit(state.copyWith(polylines: currenPolylines));
+      emit(_onNuevaUbicacion(event));
     });
 
     on<OnMarcarRecorrido>((event, emit) {
-      if (!state.dibujarRecorrido) {
-        _miRuta = _miRuta.copyWith(colorParam: Colors.black87);
-      } else {
-        _miRuta = _miRuta.copyWith(colorParam: Colors.transparent);
-      }
-      final currenPolylines = state.polylines;
-      currenPolylines['mi_ruta'] = _miRuta;
-      emit(state.copyWith(
-          polylines: currenPolylines,
-          dibujarRecorrido: !state.dibujarRecorrido));
+      emit(_onMarcarRecorrido(event));
     });
   }
 
@@ -59,5 +46,25 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
   void moverCamara(LatLng destino) {
     final cameraUpdate = CameraUpdate.newLatLng(destino);
     _mapController?.animateCamera(cameraUpdate);
+  }
+
+  MapaState _onNuevaUbicacion(OnNuevaUbicacion event) {
+    List<LatLng> points = [..._miRuta.points, event.ubicacion];
+    _miRuta = _miRuta.copyWith(pointsParam: points);
+    final currenPolylines = state.polylines;
+    currenPolylines['mi_ruta'] = _miRuta;
+    return state.copyWith(polylines: currenPolylines);
+  }
+
+  MapaState _onMarcarRecorrido(OnMarcarRecorrido event) {
+    if (!state.dibujarRecorrido) {
+      _miRuta = _miRuta.copyWith(colorParam: Colors.black87);
+    } else {
+      _miRuta = _miRuta.copyWith(colorParam: Colors.transparent);
+    }
+    final currenPolylines = state.polylines;
+    currenPolylines['mi_ruta'] = _miRuta;
+    return state.copyWith(
+        polylines: currenPolylines, dibujarRecorrido: !state.dibujarRecorrido);
   }
 }
