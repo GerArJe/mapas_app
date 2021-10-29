@@ -5,6 +5,18 @@ class Searchbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<BusquedaBloc, BusquedaState>(
+      builder: (context, state) {
+        if (state.seleccionManual) {
+          return Container();
+        } else {
+          return buildSearchbar(context);
+        }
+      },
+    );
+  }
+
+  Widget buildSearchbar(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
     return SafeArea(
@@ -15,7 +27,7 @@ class Searchbar extends StatelessWidget {
           onTap: () async {
             final SearchResult? resultado = await showSearch(
                 context: context, delegate: SearchDestination());
-            if (resultado != null) retornoBusqueda(resultado);
+            if (resultado != null) retornoBusqueda(context, resultado);
           },
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 13),
@@ -40,9 +52,11 @@ class Searchbar extends StatelessWidget {
     );
   }
 
-  void retornoBusqueda(SearchResult result) {
-    print('cancelo: ${result.cancelo}');
-    print('manual: ${result.manual}');
+  void retornoBusqueda(BuildContext context, SearchResult result) {
     if (result.cancelo) return;
+    if (result.manual!) {
+      BlocProvider.of<BusquedaBloc>(context).add(OnActivarMarcadorManual());
+      return;
+    }
   }
 }

@@ -6,8 +6,11 @@ part 'busqueda_state.dart';
 
 class BusquedaBloc extends Bloc<BusquedaEvent, BusquedaState> {
   BusquedaBloc() : super(BusquedaState()) {
-    on<BusquedaEvent>((event, emit) {
-      // TODO: implement event handler
+    on<OnActivarMarcadorManual>((event, emit) {
+      emit(state.copyWith(seleccionManual: true));
+    });
+    on<OnDesactivarMarcadorManual>((event, emit) {
+      emit(state.copyWith(seleccionManual: false));
     });
   }
 }
