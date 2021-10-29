@@ -7,6 +7,7 @@ import 'package:mapas_app/bloc/mi_ubicacion/mi_ubicacion_bloc.dart';
 import 'package:mapas_app/bloc/busqueda/busqueda_bloc.dart';
 import 'package:mapas_app/models/search_result.dart';
 import 'package:mapas_app/search/search_destination.dart';
+import 'package:mapas_app/services/traffic_service.dart';
 
 part 'btn_ubicacion.dart';
 part 'btn_mi_ruta.dart';

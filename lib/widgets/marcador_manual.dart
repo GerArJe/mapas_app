@@ -75,10 +75,20 @@ class _BuildMarcadorManual extends StatelessWidget {
                 shape: StadiumBorder(),
                 elevation: 0,
                 splashColor: Colors.transparent,
-                onPressed: () {}),
+                onPressed: () {
+                  calcularDestino(context);
+                }),
           ),
         ),
       ],
     );
+  }
+
+  Future<void> calcularDestino(BuildContext context) async {
+    final trafficService = TrafficService();
+    final inicio = BlocProvider.of<MiUbicacionBloc>(context).state.ubicacion;
+    final destino = BlocProvider.of<MapaBloc>(context).state.ubicacionCentral;
+
+    await trafficService.getCoordsInicioYFin(inicio!, destino!);
   }
 }
