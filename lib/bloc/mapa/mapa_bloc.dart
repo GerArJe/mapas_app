@@ -21,6 +21,12 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     color: Colors.transparent,
   );
 
+  Polyline _miRutaDestino = Polyline(
+    polylineId: PolylineId('mi_ruta_destino'),
+    width: 4,
+    color: Colors.black87,
+  );
+
   MapaBloc() : super(MapaState()) {
     on<OnMapalisto>((event, emit) {
       emit(state.copyWith(mapaListo: true));
@@ -40,6 +46,10 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
 
     on<OnMovioMapa>((event, emit) {
       emit(_onMovioMapa(event));
+    });
+
+    on<OnCrearRutaInicioDestino>((event, emit) {
+      emit(_onCrearRutaInicioDestino(event));
     });
   }
 
@@ -88,5 +98,17 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
 
   MapaState _onMovioMapa(OnMovioMapa event) {
     return state.copyWith(ubicacionCentral: event.centroMapa);
+  }
+
+  MapaState _onCrearRutaInicioDestino(OnCrearRutaInicioDestino event) {
+    _miRutaDestino =
+        _miRutaDestino.copyWith(pointsParam: event.rutaCoordenadas);
+
+    final currentPolylines = state.polylines;
+    currentPolylines['mi_ruta_destino'] = _miRutaDestino;
+
+    return state.copyWith(
+      polylines: currentPolylines,
+    );
   }
 }
