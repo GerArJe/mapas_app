@@ -30,17 +30,20 @@ class _BuildMarcadorManual extends StatelessWidget {
         Positioned(
           top: 70,
           left: 20,
-          child: CircleAvatar(
-            maxRadius: 25,
-            backgroundColor: Colors.white,
-            child: IconButton(
-              onPressed: () {
-                BlocProvider.of<BusquedaBloc>(context)
-                    .add(OnDesactivarMarcadorManual());
-              },
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.black87,
+          child: FadeInLeft(
+            duration: Duration(milliseconds: 150),
+            child: CircleAvatar(
+              maxRadius: 25,
+              backgroundColor: Colors.white,
+              child: IconButton(
+                onPressed: () {
+                  BlocProvider.of<BusquedaBloc>(context)
+                      .add(OnDesactivarMarcadorManual());
+                },
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Colors.black87,
+                ),
               ),
             ),
           ),
@@ -48,9 +51,12 @@ class _BuildMarcadorManual extends StatelessWidget {
         Center(
           child: Transform.translate(
               offset: Offset(0, -12),
-              child: Icon(
-                Icons.location_on,
-                size: 50,
+              child: BounceInDown(
+                from: 200,
+                child: Icon(
+                  Icons.location_on,
+                  size: 50,
+                ),
               )),
         ),
 
@@ -58,17 +64,19 @@ class _BuildMarcadorManual extends StatelessWidget {
         Positioned(
           bottom: 70,
           left: 40,
-          child: MaterialButton(
-              minWidth: width - 120,
-              child: Text(
-                'Confirmar destino',
-                style: TextStyle(color: Colors.white),
-              ),
-              color: Colors.black,
-              shape: StadiumBorder(),
-              elevation: 0,
-              splashColor: Colors.transparent,
-              onPressed: () {}),
+          child: FadeIn(
+            child: MaterialButton(
+                minWidth: width - 120,
+                child: Text(
+                  'Confirmar destino',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: Colors.black,
+                shape: StadiumBorder(),
+                elevation: 0,
+                splashColor: Colors.transparent,
+                onPressed: () {}),
+          ),
         ),
       ],
     );
