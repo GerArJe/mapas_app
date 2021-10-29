@@ -85,6 +85,7 @@ class _BuildMarcadorManual extends StatelessWidget {
   }
 
   void calcularDestino(BuildContext context) async {
+    calculandoAlerta(context);
     final trafficService = TrafficService();
     final mapaBloc = BlocProvider.of<MapaBloc>(context);
 
@@ -100,7 +101,7 @@ class _BuildMarcadorManual extends StatelessWidget {
       final duracion = trafficResponse.routes[0].duration;
       final distancia = trafficResponse.routes[0].distance;
 
-      final points = Poly.Polyline.Decode(encodedString: geometry, precision: 6)
+      final points = poly.Polyline.Decode(encodedString: geometry, precision: 6)
           .decodedCoords;
 
       final List<LatLng> rutaCoordenadas =
@@ -108,6 +109,9 @@ class _BuildMarcadorManual extends StatelessWidget {
 
       mapaBloc
           .add(OnCrearRutaInicioDestino(rutaCoordenadas, distancia, duracion));
+
+      Navigator.of(context).pop();
+      BlocProvider.of<BusquedaBloc>(context).add(OnDesactivarMarcadorManual());
     }
   }
 }
