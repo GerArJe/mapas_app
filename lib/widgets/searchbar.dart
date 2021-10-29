@@ -12,9 +12,10 @@ class Searchbar extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 30),
         width: width,
         child: GestureDetector(
-          onTap: () {
-            print('Buscando...');
-            showSearch(context: context, delegate: SearchDestination());
+          onTap: () async {
+            final SearchResult? resultado = await showSearch(
+                context: context, delegate: SearchDestination());
+            if (resultado != null) retornoBusqueda(resultado);
           },
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 13),
@@ -37,5 +38,11 @@ class Searchbar extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void retornoBusqueda(SearchResult result) {
+    print('cancelo: ${result.cancelo}');
+    print('manual: ${result.manual}');
+    if (result.cancelo) return;
   }
 }
