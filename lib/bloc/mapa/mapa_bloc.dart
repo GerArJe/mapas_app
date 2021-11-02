@@ -107,8 +107,21 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     final currentPolylines = state.polylines;
     currentPolylines['mi_ruta_destino'] = _miRutaDestino;
 
-    return state.copyWith(
-      polylines: currentPolylines,
+    // Marcadores
+    final markerInicio = Marker(
+      markerId: MarkerId('inicio'),
+      position: event.rutaCoordenadas[0],
     );
+
+    final markerDestino = Marker(
+      markerId: MarkerId('destino'),
+      position: event.rutaCoordenadas[event.rutaCoordenadas.length - 1],
+    );
+
+    final newMarkers = {...state.markers};
+    newMarkers['inicio'] = markerInicio;
+    newMarkers['destino'] = markerDestino;
+
+    return state.copyWith(polylines: currentPolylines, markers: newMarkers);
   }
 }
