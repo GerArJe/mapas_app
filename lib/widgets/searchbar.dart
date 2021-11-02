@@ -29,8 +29,11 @@ class Searchbar extends StatelessWidget {
           onTap: () async {
             final proximidad =
                 BlocProvider.of<MiUbicacionBloc>(context).state.ubicacion;
+            final historial =
+                BlocProvider.of<BusquedaBloc>(context).state.historial;
             final SearchResult? resultado = await showSearch(
-                context: context, delegate: SearchDestination(proximidad!));
+                context: context,
+                delegate: SearchDestination(proximidad!, historial));
             if (resultado != null) retornoBusqueda(context, resultado);
           },
           child: Container(
@@ -56,11 +59,40 @@ class Searchbar extends StatelessWidget {
     );
   }
 
-  void retornoBusqueda(BuildContext context, SearchResult result) {
+  Future<void> retornoBusqueda(
+      BuildContext context, SearchResult result) async {
     if (result.cancelo) return;
     if (result.manual!) {
       BlocProvider.of<BusquedaBloc>(context).add(OnActivarMarcadorManual());
       return;
+    }
+
+    // Calcular la ruta en base al valor: Result
+    final trafficService = TrafficService();
+    final mapaBloc = BlocProvider.of<MapaBloc>(context);
+    final inicio = BlocProvider.of<MiUbicacionBloc>(context).state.ubicacion;
+    final destino = result.position;
+    final DrivingResponse drivingResponse;
+
+    if (inicio != null && destino != null) {
+      drivingResponse =
+          await trafficService.getCoordsInicioYFin(inicio, destino);
+      final geometry = drivingResponse.routes[0].geometry;
+      final duracion = drivingResponse.routes[0].duration;
+      final distancia = drivingResponse.routes[0].distance;
+      final points =
+          poly.Polyline.Decode(encodedString: geometry, precision: 6);
+      final List<LatLng> rutaCoordenadas = points.decodedCoords
+          .map((point) => LatLng(point[0], point[1]))
+          .toList();
+      mapaBloc
+          .add(OnCrearRutaInicioDestino(rutaCoordenadas, distancia, duracion));
+
+      Navigator.of(context).pop();
+
+      // Agregar al historial
+      final busquedaBloc = BlocProvider.of<BusquedaBloc>(context);
+      busquedaBloc.add(OnAgregarHistorial(result));
     }
   }
 }
