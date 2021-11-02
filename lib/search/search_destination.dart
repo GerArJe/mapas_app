@@ -60,8 +60,10 @@ class SearchDestination extends SearchDelegate<SearchResult> {
     if (query == 0) {
       return Container();
     }
-    return FutureBuilder(
-      future: _trafficService.getResultadosPorQuery(query.trim(), proximidad),
+    _trafficService.getSugerenciasPorQuery(query.trim(), proximidad);
+    // query.trim(), proximidad
+    return StreamBuilder(
+      stream: _trafficService.sugerenciasStream,
       builder: (BuildContext context, AsyncSnapshot<SearchResponse> snapshot) {
         if (!snapshot.hasData) {
           return Center(
