@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
-import 'package:flutter/material.dart' show Colors;
+import 'package:flutter/material.dart' show Colors, Offset;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:meta/meta.dart';
 
@@ -100,7 +100,9 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     return state.copyWith(ubicacionCentral: event.centroMapa);
   }
 
-  MapaState _onCrearRutaInicioDestino(OnCrearRutaInicioDestino event) {
+  MapaState _onCrearRutaInicioDestino(
+    OnCrearRutaInicioDestino event,
+  ) {
     _miRutaDestino =
         _miRutaDestino.copyWith(pointsParam: event.rutaCoordenadas);
 
@@ -111,16 +113,32 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     final markerInicio = Marker(
       markerId: MarkerId('inicio'),
       position: event.rutaCoordenadas[0],
+      infoWindow: InfoWindow(
+        title: 'Mi Ubicación',
+        snippet: 'Duración recorrido: ${(event.duracion / 60).floor()} minutos',
+      ),
     );
 
+    double kilometros = event.distancia / 1000;
+    kilometros = (kilometros * 100).floor().toDouble();
+    kilometros = kilometros / 100;
     final markerDestino = Marker(
       markerId: MarkerId('destino'),
       position: event.rutaCoordenadas[event.rutaCoordenadas.length - 1],
+      infoWindow: InfoWindow(
+        title: event.nombreDestino,
+        snippet: 'Distancia: $kilometros km',
+      ),
     );
 
     final newMarkers = {...state.markers};
     newMarkers['inicio'] = markerInicio;
     newMarkers['destino'] = markerDestino;
+
+    Future.delayed(Duration(milliseconds: 300)).then((value) {
+      _mapController?.showMarkerInfoWindow(MarkerId('inicio'));
+      _mapController?.showMarkerInfoWindow(MarkerId('destino'));
+    });
 
     return state.copyWith(polylines: currentPolylines, markers: newMarkers);
   }

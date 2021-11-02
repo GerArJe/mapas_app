@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
 
 import 'package:mapas_app/helpers/debouncer.dart';
 import 'package:mapas_app/models/driving_response.dart';
+import 'package:mapas_app/models/reverse_query_response.dart';
 import 'package:mapas_app/models/search_response.dart';
 
 class TrafficService {
@@ -78,5 +79,19 @@ class TrafficService {
     });
 
     Future.delayed(Duration(milliseconds: 201)).then((_) => timer.cancel());
+  }
+
+  Future<ReverseQueryResponse> getCoordenadasInfo(LatLng destinoCoords) async {
+    final url =
+        '${_baseUrlGeo}/mapbox.places/${destinoCoords.longitude},${destinoCoords.latitude}.json';
+
+    final resp = await _dio.get(url, queryParameters: {
+      'access_token': _apiKey,
+      'language': 'es',
+    });
+
+    final data = reverseQueryResponseFromJson(resp.data);
+
+    return data;
   }
 }
