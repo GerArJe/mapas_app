@@ -11,6 +11,7 @@ import 'package:mapas_app/models/search_result.dart';
 import 'package:mapas_app/search/search_destination.dart';
 import 'package:mapas_app/services/traffic_service.dart';
 import 'package:mapas_app/helpers/helpers.dart';
+import 'package:mapas_app/models/driving_response.dart';
 
 part 'btn_ubicacion.dart';
 part 'btn_mi_ruta.dart';

@@ -22,7 +22,7 @@ class _MapaPageState extends State<MapaPage> {
 
   @override
   void dispose() {
-    BlocProvider.of<MiUbicacionBloc>(context).cancelarSeguimiento();
+    // BlocProvider.of<MiUbicacionBloc>(context).cancelarSeguimiento();
     super.dispose();
   }
 
