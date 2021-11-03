@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart' show Colors, Offset;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mapas_app/helpers/helpers.dart';
 import 'package:meta/meta.dart';
 
 import 'package:mapas_app/themes/uber_map_theme.dart';
@@ -48,8 +49,8 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
       emit(_onMovioMapa(event));
     });
 
-    on<OnCrearRutaInicioDestino>((event, emit) {
-      emit(_onCrearRutaInicioDestino(event));
+    on<OnCrearRutaInicioDestino>((event, emit) async {
+      emit(await _onCrearRutaInicioDestino(event));
     });
   }
 
@@ -100,19 +101,24 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     return state.copyWith(ubicacionCentral: event.centroMapa);
   }
 
-  MapaState _onCrearRutaInicioDestino(
+  Future<MapaState> _onCrearRutaInicioDestino(
     OnCrearRutaInicioDestino event,
-  ) {
+  ) async {
     _miRutaDestino =
         _miRutaDestino.copyWith(pointsParam: event.rutaCoordenadas);
 
     final currentPolylines = state.polylines;
     currentPolylines['mi_ruta_destino'] = _miRutaDestino;
 
+    // Icono inicio
+    final iconInicio = await getAssetImageMarker();
+    final iconDestino = await getNetworkImageMarker();
+
     // Marcadores
     final markerInicio = Marker(
       markerId: MarkerId('inicio'),
       position: event.rutaCoordenadas[0],
+      icon: iconInicio,
       infoWindow: InfoWindow(
         title: 'Mi Ubicación',
         snippet: 'Duración recorrido: ${(event.duracion / 60).floor()} minutos',
@@ -125,6 +131,7 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     final markerDestino = Marker(
       markerId: MarkerId('destino'),
       position: event.rutaCoordenadas[event.rutaCoordenadas.length - 1],
+      icon: iconDestino,
       infoWindow: InfoWindow(
         title: event.nombreDestino,
         snippet: 'Distancia: $kilometros km',
@@ -135,9 +142,9 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     newMarkers['inicio'] = markerInicio;
     newMarkers['destino'] = markerDestino;
 
-    Future.delayed(Duration(milliseconds: 300)).then((value) {
-      _mapController?.showMarkerInfoWindow(MarkerId('inicio'));
-      _mapController?.showMarkerInfoWindow(MarkerId('destino'));
+    await Future.delayed(Duration(milliseconds: 300)).then((value) {
+      // _mapController?.showMarkerInfoWindow(MarkerId('inicio'));
+      // _mapController?.showMarkerInfoWindow(MarkerId('destino'));
     });
 
     return state.copyWith(polylines: currentPolylines, markers: newMarkers);
