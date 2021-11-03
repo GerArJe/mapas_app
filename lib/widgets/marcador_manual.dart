@@ -92,6 +92,9 @@ class _BuildMarcadorManual extends StatelessWidget {
     final inicio = BlocProvider.of<MiUbicacionBloc>(context).state.ubicacion;
     final destino = mapaBloc.state.ubicacionCentral;
 
+    // Obtener informacion del destino
+    if (destino != null) trafficService.getCoordenadasInfo(destino);
+
     if (inicio != null && destino != null) {
       // Obtener informacion del destino
       final ReverseQueryResponse reverseQueryResponse =
