@@ -118,10 +118,17 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     final markerInicio = Marker(
       markerId: MarkerId('inicio'),
       position: event.rutaCoordenadas[0],
+<<<<<<< HEAD
       icon: iconInicio,
       infoWindow: InfoWindow(
         title: 'Mi Ubicación',
         snippet: 'Duración recorrido: ${(event.duracion / 60).floor()} minutos',
+=======
+      infoWindow: InfoWindow(
+        title: 'Mi casa',
+        snippet: 'Este es el punto incial de mi casa',
+        onTap: () {},
+>>>>>>> c4ca06e68a836f235c0089439bcb2846389dd6a5
       ),
     );
 
