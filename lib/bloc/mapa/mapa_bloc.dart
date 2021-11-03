@@ -111,11 +111,15 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     currentPolylines['mi_ruta_destino'] = _miRutaDestino;
 
     // Icono inicio
-    final iconInicio = await getAssetImageMarker();
-    final iconDestino = await getNetworkImageMarker();
+    // final iconInicio = await getAssetImageMarker();
+    final iconInicio = await getMarkerIncioIcon(event.duracion.toInt());
+    // final iconDestino = await getNetworkImageMarker();
+    final iconDestino =
+        await getMarkerDestinoIcon(event.nombreDestino, event.distancia);
 
     // Marcadores
     final markerInicio = Marker(
+      anchor: Offset(0.1, 1.0),
       markerId: MarkerId('inicio'),
       position: event.rutaCoordenadas[0],
       icon: iconInicio,
@@ -132,6 +136,7 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
       markerId: MarkerId('destino'),
       position: event.rutaCoordenadas[event.rutaCoordenadas.length - 1],
       icon: iconDestino,
+      anchor: Offset(0.1, 0.90),
       infoWindow: InfoWindow(
         title: event.nombreDestino,
         snippet: 'Distancia: $kilometros km',
