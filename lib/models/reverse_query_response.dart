@@ -133,7 +133,7 @@ class Context {
     required this.id,
     required this.textEs,
     required this.text,
-    required this.wikidata,
+    this.wikidata,
     this.languageEs,
     this.language,
     this.shortCode,
@@ -142,7 +142,7 @@ class Context {
   String id;
   String textEs;
   String text;
-  String wikidata;
+  String? wikidata;
   Language? languageEs;
   Language? language;
   ShortCode? shortCode;
